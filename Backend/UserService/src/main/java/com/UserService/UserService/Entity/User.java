@@ -36,6 +36,8 @@ public class User {
     @Column(nullable = false)
     private boolean isApproved = false;
 
+        private boolean isRejected = false;
+
     @PrePersist
     public void prePersist() {
         this.created_at = LocalDateTime.now();

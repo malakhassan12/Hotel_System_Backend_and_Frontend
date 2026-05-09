@@ -8,6 +8,7 @@ import ProtectedRoute from "./Routes/ProtectedRoute";
 import { roles } from "./Constants/ConstantsFromBack";
 import useAuthStore from "./Store/authStore";
 import ReviewsPerRoom from "./Pages/Room/ReviewsPerRoom";
+import StatusPage from "./Pages/StatusPage";
 
 // Lazy Loading for Public Pages
 const NotFound = lazy(() => import("./Pages/NotFound"));
@@ -77,6 +78,7 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/logout" element={<Logout />} />
+          <Route path="/waiting-approval" element={<StatusPage />}/>
 
           {/* ===================================== Customer ==================================  */}
 

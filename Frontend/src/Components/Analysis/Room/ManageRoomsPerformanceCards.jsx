@@ -29,7 +29,7 @@ const ManageRoomsPerformanceCards = () => {
     ).length;
     
     const maintenance = safeRooms.filter(
-      (room) => room.status === "UNAVAILABLE"
+      (room) => room.status === "MAINTENANCE"
     ).length;
 
     // Calculate percentages

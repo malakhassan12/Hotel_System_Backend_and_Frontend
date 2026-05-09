@@ -74,8 +74,8 @@ const UserTable = ({ users }) => {
     return true;
   });
 
-  const pendingCount = users.filter(u => !u.approved).length;
-  const approvedCount = users.filter(u => u.approved).length;
+  // const pendingCount = users.filter(u => !u.approved).length;
+  // const approvedCount = users.filter(u => u.approved).length;
 
   // Mobile Card View
   const UserCard = ({ user }) => (
@@ -103,10 +103,10 @@ const UserTable = ({ users }) => {
             <IconMail size={14} color={theme.colors.gray[5]} />
             <Text size="sm">{user.email}</Text>
           </Group>
-          {user.phone && (
+          {user?.phone && (
             <Group gap="xs">
               <IconPhone size={14} color={theme.colors.gray[5]} />
-              <Text size="sm">{user.phone}</Text>
+              <Text size="sm">{user?.phone}</Text>
             </Group>
           )}
         </Stack>
@@ -158,7 +158,7 @@ const UserTable = ({ users }) => {
 
       <Stack gap="md">
         {/* Filter Bar */}
-        <Paper p="sm" radius="md" withBorder>
+        {/* <Paper p="sm" radius="md" withBorder>
           <Group justify="space-between" wrap="wrap">
             <Group gap="xs">
               <IconFilter size={18} color={theme.colors.gray[6]} />
@@ -179,7 +179,7 @@ const UserTable = ({ users }) => {
               />
             </Group>
           </Group>
-        </Paper>
+        </Paper> */}
 
         {/* Results count */}
         {filteredUsers.length !== users.length && (

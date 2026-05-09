@@ -50,14 +50,26 @@ export const useLogin = () => {
 
       return { success: true };
     } catch (err) {
+      console.log(err?.response);
       notifications.show({
         title: "Error",
         message:
-          err?.response?.data?.message || err?.message || "Failed to Login  ",
+          err?.response?.data?.error ||
+          err?.response?.data?.message ||
+          err?.message ||
+          "Failed to Login  ",
         color: "red",
       });
       const errorMsg =
-        err.response?.data?.message || "Invalid email or password";
+        err?.response?.data?.error ||
+        err.response?.data?.message ||
+        "Invalid email or password";
+
+      if (errorMsg === "Employee account is pending approval") {
+        navigate("/waiting-approval", { state: { status: "pending" } });
+      } else if (errorMsg === "Employee account is rejected approval") {
+        navigate("/waiting-approval", { state: { status: "rejected" } });
+      }
       setServerError(errorMsg);
 
       return { success: false };

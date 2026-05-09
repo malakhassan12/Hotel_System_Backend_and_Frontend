@@ -244,16 +244,17 @@ const Register = () => {
               placeholder="Select your role"
               size="md"
               radius="md"
+              defaultValue={roles[1]}
               data={[
                 {
                   value: roles[1],
-                  label: "Customer ",
+                  label: "Customer",
                 },
                 {
                   value: roles[2],
-                  label: "Receptionist ",
+                  label: "Receptionist",
                 },
-                { value: roles[0], label: "Admin" },
+                // { value: roles[0], label: "Admin" },
               ]}
               {...form.getInputProps("role")}
             />

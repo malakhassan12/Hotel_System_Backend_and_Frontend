@@ -67,28 +67,42 @@ public class AuthService {
     public String rejectEmployee(Long userId) {
         User user = repo.findByIdAndRole(userId, Role.EMPLOYEE)
                 .orElseThrow(() -> new ResourceNotFoundException("Employee not found"));
-        repo.delete(user);
-        return "Employee rejected and removed successfully";
+user.setRejected(true);
+    user.setApproved(false);
+    repo.save(user);
+            return "Employee rejected and removed successfully";
     }
 
-    public List<User> getPendingEmployees() {
-        return repo.findAll().stream()
-                .filter(user -> user.getRole() == Role.EMPLOYEE && !user.isApproved())
-                .toList();
-    }
-
+public List<User> getPendingEmployees() {
+    return repo.findAll().stream()
+            .filter(user -> 
+                user.getRole() == Role.EMPLOYEE && 
+                !user.isApproved() && 
+                !user.isRejected() 
+            )
+            .toList();
+}
     public String login(String email, String password) {
-        User user = repo.findByEmail(email)
-                .orElseThrow(() -> new RuntimeException("User not found with email: " + email));
+      User user = repo.findByEmail(email)
+            .orElseThrow(() -> new RuntimeException("USER_NOT_FOUND"));
 
-        if (user.getRole() == Role.EMPLOYEE && !user.isApproved()) {
-            throw new RuntimeException("Employee account is pending approval");
-        }
+    // 1. فحص لو الحساب مرفوض
+    if (user.isRejected()) {
+        repo.delete(user);
+        throw new RuntimeException("Employee account is rejected approval");
+    }
 
-        if (!encoder.matches(password, user.getPassword())) {
-            throw new RuntimeException("Invalid password");
-        }
-        return jwtService.generateToken(user.getEmail(), user.getRole(), user.getId());
+    // 2. فحص لو الحساب لسه منتظر موافقة (زي ما كان عندك)
+    if (user.getRole() == Role.EMPLOYEE && !user.isApproved()) {
+        throw new RuntimeException("Employee account is pending approval");
+    }
+
+    // 3. فحص الباسورد
+    if (!encoder.matches(password, user.getPassword())) {
+        throw new RuntimeException("Invalid password");
+    }
+
+    return jwtService.generateToken(user.getEmail(), user.getRole(), user.getId());
     }
 
 }
