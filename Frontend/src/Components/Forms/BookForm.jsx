@@ -27,12 +27,14 @@ import BookingSummaryCard from "../Card/Booking/BookingSummaryCard";
 import { useForm } from "@mantine/form";
 import useCreateBookingMutation from "../../Hooks/Customer/useCreateBookingMutations";
 import { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import SendPaymentIntentBtn from "../Buttons/SendPaymentIntentBtn";
+import useBookingHistory from "../../Hooks/Customer/useBookingHistory";
 const BookForm = ({ roomId }) => {
   const { data = {} } = useGetRoom(roomId);
 
   const [showBTN, setShowBTN] = useState(false);
+  const navigate = useNavigate();
 
   // Form with validation
   const form = useForm({
@@ -87,7 +89,7 @@ const BookForm = ({ roomId }) => {
 
     return { days, total };
   };
-  const { mutate, isLoading, isSuccess } = useCreateBookingMutation();
+  const { mutate, isLoading } = useCreateBookingMutation();
 
   const { total: totalPrice } = calculateTotal();
 
@@ -100,10 +102,27 @@ const BookForm = ({ roomId }) => {
     };
     console.log("Booking Data:", finalData);
     // Add your API call here
-    mutate(finalData);
-    form.reset();
-    setShowBTN(true);
+    mutate(finalData, {
+      onSuccess: () => {
+        console.log("Booking created successfully!");
+        form.reset();
+        setShowBTN(true);
+        navigate("/customer");
+      },
+      onError: (error) => {
+        console.error("Booking failed:", error);
+      },
+    });
   });
+
+  const { data: historyQuery } = useBookingHistory();
+
+  console.log(historyQuery);
+
+  const finalBookings = Array?.isArray(historyQuery) ? historyQuery : [];
+
+  const Booking = finalBookings.find((e) => e.roomId === Number(roomId));
+  console.log(Booking);
 
   return (
     <Grid gutter="xl">
@@ -239,20 +258,25 @@ const BookForm = ({ roomId }) => {
                 }}
               />
 
-              <Button
-                fullWidth
-                size="lg"
-                type="submit"
-                mt="md"
-                variant="gradient"
-                gradient={{ from: "blue", to: "cyan", deg: 135 }}
-                radius="md"
-                leftSection={<IconCreditCard size={20} />}
-                loading={isLoading}
-                disabled={isSuccess}
-              >
-                Confirm Booking
-              </Button>
+              {!showBTN && (
+                <Button
+                  fullWidth
+                  size="lg"
+                  type="submit"
+                  mt="md"
+                  variant="gradient"
+                  gradient={{ from: "blue", to: "cyan", deg: 135 }}
+                  radius="md"
+                  leftSection={<IconCreditCard size={20} />}
+                  loading={isLoading}
+                  disabled={
+                    Booking?.status == "ACCEPTED" ||
+                    Booking?.status == "REJECTED"
+                  }
+                >
+                  Confirm Booking
+                </Button>
+              )}
 
               {showBTN && <SendPaymentIntentBtn roomId={roomId} />}
             </Stack>

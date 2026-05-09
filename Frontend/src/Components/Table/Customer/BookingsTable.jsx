@@ -28,6 +28,9 @@ const BookingsTable = ({ bookings }) => {
   const [selectedBooking, setSelectedBooking] = useState(null);
   const navigate = useNavigate();
 
+
+  console.log(bookings)
+
   const { createPaymentMutation } = usePaymentMutations();
   const [currentPage, setCurrentPage] = useState(1);
   const itemsPerPage = 5; // Changed to 5 for better display, adjust as needed
@@ -69,7 +72,6 @@ const BookingsTable = ({ bookings }) => {
               gridTemplateColumns: "repeat(8, 1fr)",
               gap: "12px",
               padding: "12px 16px",
-              background: "linear-gradient(135deg, #1971c2 0%, #339af0 100%)",
               borderRadius: "8px",
               color: "white",
               fontWeight: 700,
@@ -185,7 +187,7 @@ const BookingsTable = ({ bookings }) => {
               {/* Actions */}
               <Group gap="xs" justify="center">
                 {
-                  (!booking?.paymentStatus) && (
+                  (!booking?.paymentStatus && booking?.status == "ACCEPTED") && (
                     <Tooltip label="Make Payment">
                       <ActionIcon
                         variant="light"

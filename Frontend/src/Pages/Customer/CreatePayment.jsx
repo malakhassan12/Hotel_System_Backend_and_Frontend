@@ -211,26 +211,7 @@ const CreatePayment = () => {
 
             <Divider />
 
-            {/* Amount Section (if you have amount data) */}
-            <SimpleGrid cols={2} spacing="md">
-              <Paper p="sm" withBorder radius="md">
-                <Text size="xs" c="dimmed" ta="center">
-                  Total Amount
-                </Text>
-                <Text size="xl" fw={800} c="blue.7" ta="center">
-                  $299.00
-                </Text>
-              </Paper>
-              <Paper p="sm" withBorder radius="md">
-                <Text size="xs" c="dimmed" ta="center">
-                  Booking ID
-                </Text>
-                <Text size="sm" fw={600} ta="center">
-                  #{Math.floor(Math.random() * 100000)}
-                </Text>
-              </Paper>
-            </SimpleGrid>
-
+          
             {/* Payment Button */}
             <Button
               onClick={handlePayment}

@@ -5,7 +5,7 @@ const bookingStatus = [
   "ACCEPTED",
   "CANCELLED",
   "REJECTED",
-  "CHECKED_IN",
+  "CHECKED IN",
   "COMPLETED",
   "CHECKED_OUT",
 ];

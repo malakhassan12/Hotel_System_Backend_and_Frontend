@@ -202,13 +202,7 @@ const ManageRoomModal = ({
                 />
               </Grid.Col>
 
-              <Grid.Col span={6}>
-                <Select
-                  label="Status"
-                  data={roomStatus}
-                  {...form.getInputProps("status")}
-                />
-              </Grid.Col>
+             
             </Grid>
           </Stack>
         </Paper>

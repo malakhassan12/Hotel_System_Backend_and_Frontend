@@ -1,15 +1,18 @@
 import { Button } from "@mantine/core";
 import React from "react";
-import { Link, useNavigate } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import useAuthStore from "../../Store/authStore";
 import useGetOneBooking from "../../Hooks/Customer/useGetOneBooking";
 import useGetRoom from "../../Hooks/Room/useGetRoom";
 import usePaymentMutations from "../../Hooks/Payement/usePaymentMutations";
 
-const SendPaymentIntentBtn = ({ roomId }) => {
+const SendPaymentIntentBtn = () => {
+  const { roomId } = useParams();
   const { user } = useAuthStore();
 
-  const { data: booking } = useGetOneBooking(user?.userId, roomId);
+  console.log(user?.userId, Number(roomId));
+
+  const { data: booking = {} } = useGetOneBooking(user?.userId, Number(roomId));
   console.log(booking);
   const { data: room } = useGetRoom(roomId);
   console.log(room);
@@ -17,7 +20,6 @@ const SendPaymentIntentBtn = ({ roomId }) => {
   const { createPaymentMutation } = usePaymentMutations();
 
   const navigate = useNavigate();
-  
 
   // const makePayment = () => {
   //   createPaymentMutation.mutate({
@@ -26,17 +28,19 @@ const SendPaymentIntentBtn = ({ roomId }) => {
   //   });
   // };
   const makePayment = async () => {
-  const res = await createPaymentMutation.mutateAsync({
-    bookingId: booking.id,
-    amount: booking.totalPrice,
-  });
+    const res = await createPaymentMutation.mutateAsync({
+      bookingId: booking.id,
+      amount: booking.totalPrice,
+    });
 
-  const clientSecret = res.clientSecret;
+    const clientSecret = res.clientSecret;
 
-  navigate(`/customer/create-payment/${roomId}`, {
-    state: { clientSecret },
-  });
-};
+    navigate(`/customer/create-payment/${roomId}`, {
+      state: { clientSecret },
+    });
+  };
+
+  console.log(booking);
 
   return (
     <>
@@ -52,6 +56,7 @@ const SendPaymentIntentBtn = ({ roomId }) => {
         to={`/customer/create-payment/${roomId}`}
         onClick={makePayment}
         loading={createPaymentMutation?.isPending}
+        disabled={booking?.status !== "ACCEPTED"}
       >
         Go To Payment ?
       </Button>

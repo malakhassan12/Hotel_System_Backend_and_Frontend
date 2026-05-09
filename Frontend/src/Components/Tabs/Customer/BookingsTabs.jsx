@@ -106,7 +106,7 @@ const BookingsTabs = ({ tabs, activeTab, onTabChange }) => {
                 <span style={{ fontSize: "16px" }}>
                   {tab.label.split(" ")[0]}
                 </span>
-                <span style={{ color: "black" }}>
+                <span color="var(--mantine-color-pink-2)">
                   {tab.label.split(" ").slice(1).join(" ")}
                 </span>
               </span>
